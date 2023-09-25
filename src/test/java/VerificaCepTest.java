@@ -1,13 +1,33 @@
 import io.restassured.RestAssured;
-import org.junit.jupiter.api.BeforeAll;
+import io.restassured.http.ContentType;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import static io.restassured.RestAssured.given;
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 
 public class VerificaCepTest {
-    private String URL = "https://viacep.com.br/ws/";
+    private String BASE_URL = "https://viacep.com.br/ws/";
 
-    @BeforeAll
+    @BeforeEach
     void init(){
-        RestAssured.baseURI = URL;
+        RestAssured.baseURI = BASE_URL;
+    }
+
+    @Test
+    @DisplayName("Deve verificar se o CEP passado na URL é válido, validando o Response Body de acordo com o tal schema JSON")
+    void testeVerificandoUmCepValido() {
+        given()
+                .accept(ContentType.JSON)
+                .pathParam("cep", "58075075")
+                .when()
+                .get("/{cep}/json")
+                .then()
+                .statusCode(200)
+                .body(matchesJsonSchemaInClasspath("schema/SchemaCep.json"));
     }
 }
+
 
 
