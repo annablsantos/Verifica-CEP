@@ -22,9 +22,9 @@ public class VerificaCepTest {
         given()
                 .accept(ContentType.JSON)
                 .pathParam("cep", "58075075")
-                .when()
+        .when()
                 .get("/{cep}/json")
-                .then()
+        .then()
                 .statusCode(200)
                 .body(matchesJsonSchemaInClasspath("schema/SchemaCep.json"));
     }
